@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}MicroBlog - Register{% endblock %} 
+
+{% block script %}
+{{ super() }}
+    <link rel="stylesheet" href="../static/style/auth.css">
+{% endblock %}
+
+{% block content %}
+
+<section class="container">
+    <div class="form-wrap shadow-lg">
+
+        <h1 class="title-form">Log In</h1>
+        <p>Log In and enjoy your blog account</p>
+        <form method="POST">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" id="email">
+
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password">
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+            </div>
+
+            <button type="button" class="btn btn-success mb-3">Log In</button>
+            <p>Forgot your password? <a href="#">Click Here</a></p>
+        </form>
+   
+    </div>
+    <p>Don't have an account yet? <a href="#">Register Here</a></p>
+
+</section>
+
+
+
+
+
+{% endblock %}

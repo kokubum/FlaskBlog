@@ -1,0 +1,64 @@
+* {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+}
+
+.container{
+    margin:25px auto;
+    padding:25px;
+    max-width: 600px;
+}
+
+.form-wrap{
+    padding:10px 25px;
+    background-color: #26519e;
+    border-radius: 15px;
+    margin-bottom: 8px;
+}
+
+.form-group{
+    margin-top: 10px;
+}
+
+.form-group label{
+    display: block;
+    color:#fff;
+    font-size:1.1em ;
+}
+
+.form-check label{
+    color:#fff;
+}
+
+.form-group input{
+    width: 100%;
+    padding: 5px 10px;
+}
+
+.form-wrap .title-form,
+.form-wrap p{
+    text-align: center;
+    color:#fff;
+
+}
+
+.title-form{
+    font-size: 2.8em;
+    font-weight: bold;
+
+}
+
+.container p{
+    text-align: center;
+
+}
+
+.btn{
+    width: 100%;
+    margin-top: 20px;
+
+    font-size: 1.2em;
+}
+
+
+

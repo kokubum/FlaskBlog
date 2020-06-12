@@ -1,0 +1,23 @@
+.navbar{
+    background-color:#26519e;
+}
+
+.nav-link{
+    font-family: 'Rajdhani', sans-serif;
+    color: #7ca9f8 !important;
+    font-size: 1.2em;
+}
+
+
+.nav-link:hover{
+    color:#fff !important;
+}
+
+.navbar-brand{
+    font-family: 'Anton', sans-serif;
+    font-size: 1.6em;
+    color:#fff !important;
+}
+
+
+
