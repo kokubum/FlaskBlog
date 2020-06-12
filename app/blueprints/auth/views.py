@@ -1,11 +1,14 @@
 from flask import render_template,url_for
+from .forms import RegistrationForm,LoginForm
 from . import auth
 
 
-@auth.route('/register')
+@auth.route('/register',methods=['GET','POST'])
 def sign_up():
-    return render_template('register.html')
+    form = RegistrationForm()
+    return render_template('register.html',form=form)
 
 @auth.route('/login')
 def login():
-    return render_template('login.html')
+    form = LoginForm()
+    return render_template('login.html',form=form)
