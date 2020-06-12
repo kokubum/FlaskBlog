@@ -1,2 +1,2 @@
-# FlaskBlog
-A Blog application written in python 3 and Flask.
+# Blog Application
+A Blog App written in python 3 with the Flask framework.
