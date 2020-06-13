@@ -14,7 +14,7 @@ def create_app(config_name):
 
     #Initializing the extensions
     db.init_app(app)
-    bcrypt.ini_app(app)
+    bcrypt.init_app(app)
 
     # Importing the blueprints
     from .blueprints.main import main as main_blueprint
