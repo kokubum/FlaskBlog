@@ -4,9 +4,9 @@ import os
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY','random_secret_key')
+    SECRET_KEY = os.environ.get('SECRET_KEY','secret_key')
 
-    SQLALCHEMT_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
     DEBUG = True

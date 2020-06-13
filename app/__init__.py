@@ -7,6 +7,7 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 
 
+
 #Factory of the application
 def create_app(config_name):
     app = Flask(__name__)

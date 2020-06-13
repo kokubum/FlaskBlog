@@ -23,6 +23,15 @@ class User(db.Model):
     def check_password(self,password):
         return bcrypt.check_password_hash(self.password_hash,password)
 
+    
+    @classmethod
+    def find_by_email(cls,email):
+        return cls.query.filter_by(email=email).first()
+
+    @classmethod
+    def find_by_username(cls,username):
+        return cls.query.filter_by(username=username).first()
+
 class Role(db.Model):
 
     __tablename__ = 'roles'

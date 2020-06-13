@@ -130,3 +130,7 @@ dmypy.json
 
 #vs-code virtual-env
 .vscode
+
+#my-databases
+data-dev.sqlite
+data-prod.sqlite
