@@ -6,7 +6,7 @@ class RegistrationForm(FlaskForm):
     first_name = StringField('First Name',validators=[InputRequired(),Regexp('[A-Z][a-z]*$',message='First name only with uppercase letter')])
     last_name = StringField('Last Name',validators=[InputRequired(),Regexp('[A-Z][a-z]*$',message='Last name only with uppercase letter')])
     email = StringField('Email',validators=[InputRequired(),Email(message='Invalid email address')])
-    user = StringField('User',validators=[InputRequired(),Length(min=5,message='Username must contain at least 5 characters')])
+    username = StringField('Username',validators=[InputRequired(),Length(min=5,message='Username must contain at least 5 characters')])
     password = PasswordField(
         'Password',
         validators=[
