@@ -70,7 +70,11 @@ def confirm_account(token):
         flash('Invalid or expired token')
     return redirect(url_for('auth.login'))
 
-@auth.route('/teste-login')
+@auth.route('/teste-fresh')
 @fresh_login_required
-def teste_login():
-    return current_user.email 
+def teste_fresh():
+    return "For Fresh Session"
+
+@auth.route('/teste-normal')
+def teste_normal():
+    return "For Normal Session"

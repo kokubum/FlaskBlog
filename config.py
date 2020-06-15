@@ -13,7 +13,6 @@ class Config:
     MAIL_PORT = int(os.environ.get('MAIL_PORT','587'))
     MAIL_SERVER = os.environ.get('MAIL_SERVER','smtp.googlemail.com')
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS','true')
-
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_SENDER = '[ADMIN]<admin@blog.com>'
