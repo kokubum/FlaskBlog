@@ -1,6 +1,6 @@
 from itsdangerous import URLSafeTimedSerializer as Serializer
-from flask_login import UserMixin
 from app import db, bcrypt,login_manager
+from flask_login import UserMixin
 from flask import current_app
 
 
@@ -17,6 +17,7 @@ class User(db.Model,UserMixin):
     email = db.Column(db.String(40),unique=True,nullable=False,index=True)
     username = db.Column(db.String(40),unique=True,nullable=False,index=True)
     password_hash = db.Column(db.String(64),nullable=False)
+    confirmed = db.Column(db.Boolean,default=False)
     session_token = db.Column(db.String(100))
 
     role_id = db.Column(db.Integer,db.ForeignKey('roles.id'))
@@ -32,6 +33,10 @@ class User(db.Model,UserMixin):
     def check_password(self,password):
         return bcrypt.check_password_hash(self.password_hash,password)
 
+    def generate_confirmation_token(self):
+        serial = Serializer(current_app.config['SECRET_KEY'])
+        return serial.dumps(self.id)
+
     def get_id(self):
         return self.session_token
 
@@ -45,6 +50,27 @@ class User(db.Model,UserMixin):
         self.session_token = None
         
         db.session.commit()
+
+    @classmethod
+    def confirm_account(cls,confirmation_token):
+        serial = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = serial.loads(confirmation_token,max_age=3600)
+        except:
+            return False
+        
+        user = cls.find_by_id(data)
+        if not user:
+            return False
+        
+        user.confirmed = True
+        db.session.commit()
+
+        return True
+
+    @classmethod
+    def find_by_id(cls,id):
+        return User.query.filter_by(id=id).first()
 
     @classmethod
     def find_by_email(cls,email):

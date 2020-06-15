@@ -1,0 +1,9 @@
+<p><strong>Dear {{ user.name}},</strong></p>
+<hr>
+<p>To confirm your password, you only need to click in the following link:</p>
+
+<a href="{{ url_for('auth.confirm_account',token=token,_external=True) }}">Confirm Here</a>
+
+<p>Sincerely,</p>
+<p>The Flask Blog Team</p>
+<p><strong>Note: replies to this email address are not monitored.</strong></p>

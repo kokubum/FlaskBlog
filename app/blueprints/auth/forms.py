@@ -1,5 +1,5 @@
 from wtforms.validators import InputRequired,Email,EqualTo,Regexp,Length,ValidationError
-from wtforms import StringField,PasswordField
+from wtforms import StringField,PasswordField,SubmitField
 from flask_wtf import FlaskForm
 from ...models import User
 import re
@@ -18,6 +18,7 @@ class RegistrationForm(FlaskForm):
         ]
     )
     confirm_password = PasswordField('Confirm Password',validators=[EqualTo('password',message=('Passwords must match'))])
+    submit = SubmitField('Register')
 
 
     def validate_email(self,field):
@@ -36,3 +37,4 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('Email',validators=[InputRequired()])
     password = PasswordField('Password',validators=[InputRequired()])
+    submit = SubmitField('Log In')

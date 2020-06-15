@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}MicroBlog - Register{% endblock %} 
+{% block title %}MicroBlog - Log In{% endblock %} 
 
 {% block script %}
 {{ super() }}
@@ -25,11 +25,10 @@
             {{ render_field(form.email) }}
             {{ render_field(form.password) }}
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+                <input type="checkbox" name="check-field" class="form-check-input" >
+                <label class="form-check-label" for="check-field">Remember Me</label>
             </div>
-
-            <button type="submit" class="btn btn-success mb-3">Log In</button>
+            {{ form.submit(class_="btn btn-success mb-3") }}
             <p>Forgot your password? <a href="#">Click Here</a></p>
         </form>
    

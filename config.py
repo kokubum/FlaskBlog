@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 
 #Directory that the database will be saved
@@ -5,6 +6,20 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY','secret_key')
+    REMEMBER_COOKIE_DURATION = os.environ.get('REMEMBER_COOKIE_DURATION',timedelta(minutes=5))
+    PERMANENT_SESSION_LIFETIME = os.environ.get('PERMANENT_SESSION_LIFETIME',timedelta(minutes=5))
+
+    #Email Configuration
+    MAIL_PORT = int(os.environ.get('MAIL_PORT','587'))
+    MAIL_SERVER = os.environ.get('MAIL_SERVER','smtp.googlemail.com')
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS','true')
+
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_SENDER = '[ADMIN]<admin@blog.com>'
+    
+    ADMIN_BLOG = os.environ.get('ADMIN_BLOG')
+
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

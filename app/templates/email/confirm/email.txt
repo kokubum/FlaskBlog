@@ -1,0 +1,11 @@
+Dear {{ user.name }},
+
+To confirm your password, you only need to click in the following link:
+
+{{ url_for('auth.confirm_account',token=token,_external=True) }}
+
+Sincerely,
+
+The Flask Blog Team
+
+Note: replies to this email address are not monitored.
