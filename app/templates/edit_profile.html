@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}FlaskBlog - Edit Profile{% endblock %} 
+
+{% block script %}
+{{ super() }}
+    <link rel="stylesheet" href="../static/style/auth.css">
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="container">
+    <div class="form-wrap shadow-lg">
+
+        <h1 class="title-form">Edit Profile</h1>
+        
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {% from "macros.html" import render_field %}
+            {{ render_field(form.first_name,placeholder=current_user.name.split()[0]) }}
+            {{ render_field(form.last_name,placeholder=current_user.name.split()[1]) }}
+            {{ render_field(form.location,placeholder=current_user.location) }}
+            {{ render_field(form.about_me,class_="about_me",placeholder=current_user.about_me) }}
+            {{ form.submit(class_="btn btn-success mb-3") }}
+            
+        </form>
+   
+    </div>
+   
+
+</section>
+
+
+
+{% endblock %}

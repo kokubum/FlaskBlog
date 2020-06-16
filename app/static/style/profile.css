@@ -1,0 +1,13 @@
+.container{
+    max-width: 700px;
+    padding: 20px 30px;
+
+}
+
+.profile{
+ 
+    width: 100%;
+    padding: 25px;
+ 
+    border-radius: 10px;
+}

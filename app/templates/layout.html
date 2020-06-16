@@ -11,6 +11,8 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="../static/style/layout.css">
     {% endblock %}
+    {{ moment.include_moment() }}
+    {{ moment.include_jquery() }}
 </head>
 <body class="bg-light">
     <!-- Navbar -->
@@ -27,6 +29,9 @@
           <!-- Right -->
           <ul class="navbar-nav ml-auto">
             {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('user.profile',username=current_user.username)}}">Profile</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('auth.logout')}}">Log Out</a>
             </li>

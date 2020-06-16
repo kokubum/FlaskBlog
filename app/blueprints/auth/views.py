@@ -1,4 +1,4 @@
-from flask_login import login_user,logout_user,login_required,fresh_login_required,current_user
+from flask_login import login_user,logout_user,current_user,login_required
 from flask import render_template,url_for,redirect,flash,request
 from .forms import RegistrationForm,LoginForm
 from urllib.parse import urlparse,urljoin
@@ -54,11 +54,11 @@ def login():
     
 
 @auth.route('/logout')
+@login_required
 def logout():
-    if current_user.is_authenticated:
-        current_user.remove_session_token()
-        logout_user()
-        flash('Logout successfuly')
+    current_user.remove_session_token()
+    logout_user()
+    flash('Logout successfuly')
     return redirect(url_for('main.home'))
 
 @auth.route('/confirm/<token>')
@@ -70,11 +70,8 @@ def confirm_account(token):
         flash('Invalid or expired token')
     return redirect(url_for('auth.login'))
 
-@auth.route('/teste-fresh')
-@fresh_login_required
-def teste_fresh():
-    return "For Fresh Session"
 
-@auth.route('/teste-normal')
-def teste_normal():
-    return "For Normal Session"
+@auth.before_app_request
+def before_each_request():
+    if current_user.is_authenticated:
+        current_user.ping()
