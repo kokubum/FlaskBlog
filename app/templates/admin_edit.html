@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}FlaskBlog - Edit Profile [ADMIN]{% endblock %} 
+
+{% block script %}
+{{ super() }}
+    <link rel="stylesheet" href="../static/style/auth.css">
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="container">
+    <div class="form-wrap shadow-lg">
+
+        <h1 class="title-form">Edit Profile</h1>
+        
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {% from "macros.html" import render_field %}
+            {{ render_field(form.first_name,placeholder=user.name.split()[0]) }}
+            {{ render_field(form.last_name,placeholder=user.name.split()[1]) }}
+            {{ render_field(form.location,placeholder=user.location) }}
+            {{ render_field(form.about_me,class_="about_me",placeholder=user.about_me) }}
+            {{ render_field(form.location,placeholder=user.location) }}
+            {{ render_field(form.email,placeholder=user.email) }}
+            {{ render_field(form.username,placeholder=user.username) }}
+            <div class="form-check">
+                {{ form.confirmed(class_="form-check-input",_name="check-field",type="checkbox")}}
+                <label class="form-check-label" for="check-field">{{form.confirmed.label}}</label>
+            </div>
+            {{ render_field(form.role) }}
+            {{ form.submit(class_="btn btn-success mb-3") }}
+            
+        </form>
+   
+    </div>
+   
+
+</section>
+
+
+
+{% endblock %}

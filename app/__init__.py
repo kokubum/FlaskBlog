@@ -29,11 +29,10 @@ def create_app(config_name):
     # Importing the blueprints
     from .blueprints.main import main as main_blueprint
     from .blueprints.auth import auth as auth_blueprint
-    from . blueprints.user import user as user_blueprint
+    
     
     # Registering the blueprints
     app.register_blueprint(main_blueprint) 
     app.register_blueprint(auth_blueprint)
-    app.register_blueprint(user_blueprint)
     
     return app

@@ -1,8 +1,10 @@
+from .forms import EditProfileAdminForm,EditProfileForm
 from flask_login import fresh_login_required,login_required
 from ..auth.decorators import permission_required,admin_required
-from app.models import Permission
-from flask import render_template
+from app.models import Permission,User,Role
+from flask import render_template,redirect,url_for
 from . import main
+from app import db
 
 @main.route('/')
 @main.route('/home')
@@ -42,3 +44,45 @@ def error_500(error):
 @main.app_errorhandler(403)
 def error_403(error):
     return render_template('error/403.html'),403
+
+
+@main.route('/admin-edit/<int:id>')
+@login_required
+@admin_required
+def edit_admin(id):
+    user = User.query.get_or_404(id)
+    form = EditProfileAdminForm(user)
+    if form.validate_on_submit():
+        user.name = form.first_name.data+' '+form.last_name.data
+        user.username = form.username.data
+        user.email = form.email.data
+        user.location = form.location.data
+        user.about_me = form.about_me.data
+        user.confirmed = form.confirmed.data
+        user.role = Role.query.get(form.role.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('The profile has been updated')
+        return redirect(url_for('main.profile',username=user.username))
+    return render_template('admin_edit.html',form=form,user=user)
+
+@main.route('/<username>')
+def profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('profile.html',user=user)
+
+
+@main.route('/edit',methods=['GET','POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.name = form.first_name.data +' '+form.last_name.data
+        current_user.location = form.location.data
+        current_user.about_me = form.about_me.data
+        db.session.add(current_user._get_current_object())
+        db.session.commit()
+        flash('Profile updated successfuly')
+        return redirect(url_for('main.profile',username=current_user.username))
+
+    return render_template('edit_profile.html',form=form)

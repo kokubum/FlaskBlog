@@ -44,7 +44,7 @@ def login():
                 flash('Confirm your account first')
             elif user.check_password(form.password.data):
                 user.create_session_token()
-                login_user(user,remember=request.form.get('check-field'))
+                login_user(user,remember=form.remember_me.data)
                 flash('Logged in successfuly')
                 next_url = request.args.get('next')
                 return redirect(next_url) if next_url and url_is_safe(next_url) else redirect(url_for('main.home'))
@@ -75,3 +75,4 @@ def confirm_account(token):
 def before_each_request():
     if current_user.is_authenticated:
         current_user.ping()
+

@@ -13,39 +13,56 @@
 
     <div class="container" >
         <div class="profile shadow-lg">
-            <h1 class="font-weight-bold">{{user.username}}</h1>
-            
 
-            {% if user.name or user.location %}
-            <p>
-                {% if user.name %}{{ user.name }}{% endif %}
-                {% if user.location %}
-                    From <a href="http://maps.google.com/?q={{ user.location }}">{{user.location}}</a>
+            <div class="profile-img">
+                <img src="{{ user.gravatar(size=200) }}">
+            </div>
+
+            <div class="profile-header">
+                <h1 class="font-weight-bold">{{user.username}}</h1>
+            
+                {% if user.name or user.location %}
+                
+                <p>
+                    {% if user.name %}{{ user.name }}{% endif %}
+                    {% if user.location %}
+                        From <a href="http://maps.google.com/?q={{ user.location }}">{{user.location}}</a>
+                    {% endif %}
+                </p>
                 {% endif %}
-            </p>
-            {% endif %}
-            
-            <p>Member since {{ moment(user.member_since).format('L') }}, last seen {{ moment(user.last_seen).fromNow() }}</p>
+                
 
-            {% if current_user.is_admin() %}
-            <p><a href="mailto:{{user.email}}">{{ user.email }}</a></p>
-            {% endif %}
+                <p>Member since {{ moment(user.member_since).format('L') }}</p>
+                <p> Last seen {{ moment(user.last_seen).fromNow() }}</p>
 
-            <hr>
-            <h4 class="font-weight-bold">About Me</h4>
-            {% if user.about_me %}
+                {% if current_user.is_admin() %}
+                <p><a href="mailto:{{user.email}}">{{ user.email }}</a></p>
+                {% endif %}
+                {% if current_user.is_admin() %}
+                <a class="btn btn-danger mt-3" href="{{ url_for('main.edit_admin',id=user.id)}}">Edit Profile [ADMIN]</a>
+                {% endif %}
+            </div>
             
-            {{ user.about_me }}
-            {% else %}
-            <p> Write Something about yourself!</p>
-            {% endif %}
+            <div class="profile-section" >
+                <hr>
+                
+                <h4 class="font-weight-bold">About Me</h4>
+                {% if user.about_me %}
+                
+                {{ user.about_me }}
+                {% else %}
+                <p> Write Something about yourself!</p>
+                {% endif %}
+            </div>
+            
             <hr>
 
             {% if current_user == user %}
-            <a class="btn btn-outline-primary col-lg-12" href="{{ url_for('user.edit_profile') }}">Edit Profile</a>
+            <a class="btn btn-outline-primary col-lg-12" href="{{ url_for('main.edit_profile') }}">Edit Profile</a>
             {% endif %}
+            
         </div>
-       
+        
     </div>
 
 
