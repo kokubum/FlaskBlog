@@ -1,11 +1,11 @@
 from wtforms import StringField,TextAreaField,SubmitField,BooleanField,SelectField
 from wtforms.validators import Length,Regexp,InputRequired,Email
 from flask_wtf import FlaskForm
-from app.models import Role
+from app.models import Role,User
 
 class EditProfileForm(FlaskForm):
-    first_name = StringField('First Name',validators=[Regexp('[A-Z][a-z]*$',message='First name only with uppercase letter')])
-    last_name = StringField('Last Name',validators=[Regexp('[A-Z][a-z]*$',message='Last name only with uppercase letter')])
+    first_name = StringField('First Name',validators=[InputRequired(),Regexp('[A-Z][a-z]*$',message='First name only with uppercase letter')])
+    last_name = StringField('Last Name',validators=[InputRequired(),Regexp('[A-Z][a-z]*$',message='Last name only with uppercase letter')])
     location = StringField('Location',validators=[Length(0,64)])
     about_me = TextAreaField('About Me')
 
@@ -16,8 +16,8 @@ class EditProfileAdminForm(FlaskForm):
     username = StringField('Username',validators=[InputRequired(),Length(min=5,message='Username must contain at least 5 characters')])
     confirmed = BooleanField('Confirmed')
     role = SelectField('Role',coerce=int)
-    first_name = StringField('First Name',validators=[Regexp('[A-Z][a-z]*$',message='First name only with uppercase letter')])
-    last_name = StringField('Last Name',validators=[Regexp('[A-Z][a-z]*$',message='Last name only with uppercase letter')])
+    first_name = StringField('First Name',validators=[InputRequired(),Regexp('[A-Z][a-z]*$',message='First name only with uppercase letter')])
+    last_name = StringField('Last Name',validators=[InputRequired(),Regexp('[A-Z][a-z]*$',message='Last name only with uppercase letter')])
     location = StringField('Location',validators=[Length(0,64)])
     about_me = TextAreaField('About Me')
 

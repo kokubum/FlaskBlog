@@ -1,8 +1,8 @@
 from .forms import EditProfileAdminForm,EditProfileForm
+from flask import render_template,redirect,url_for,flash
 from flask_login import fresh_login_required,login_required
 from ..auth.decorators import permission_required,admin_required
 from app.models import Permission,User,Role
-from flask import render_template,redirect,url_for
 from . import main
 from app import db
 
@@ -46,7 +46,7 @@ def error_403(error):
     return render_template('error/403.html'),403
 
 
-@main.route('/admin-edit/<int:id>')
+@main.route('/admin-edit/<int:id>',methods=['GET','POST'])
 @login_required
 @admin_required
 def edit_admin(id):
@@ -55,11 +55,11 @@ def edit_admin(id):
     if form.validate_on_submit():
         user.name = form.first_name.data+' '+form.last_name.data
         user.username = form.username.data
-        user.email = form.email.data
         user.location = form.location.data
         user.about_me = form.about_me.data
         user.confirmed = form.confirmed.data
         user.role = Role.query.get(form.role.data)
+        user.change_email(form.email.data)
         db.session.add(user)
         db.session.commit()
         flash('The profile has been updated')

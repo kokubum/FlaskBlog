@@ -5,8 +5,8 @@ import os
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY','secret_key')
-    REMEMBER_COOKIE_DURATION = os.environ.get('REMEMBER_COOKIE_DURATION',timedelta(seconds=15))
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    REMEMBER_COOKIE_DURATION = os.environ.get('REMEMBER_COOKIE_DURATION',timedelta(minutes=5))
     
 
     #Email Configuration

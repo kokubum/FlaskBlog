@@ -4,7 +4,7 @@
 
 {% block script %}
 {{ super() }}
-    <link rel="stylesheet" href="../static/style/auth.css">
+    <link rel="stylesheet" href="/static/style/auth.css">
 {% endblock %}
 
 {% block content %}
@@ -29,7 +29,7 @@
                 <label class="form-check-label" for="check-field">{{form.remember_me.label}}</label>
             </div>
             {{ form.submit(class_="btn btn-primary mb-3") }}
-            <p>Forgot your password? <a href="#">Click Here</a></p>
+            <p>Forgot your password? <a href="{{ url_for('auth.recover_password') }}">Click Here</a></p>
         </form>
    
     </div>

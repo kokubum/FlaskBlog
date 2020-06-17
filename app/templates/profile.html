@@ -4,7 +4,7 @@
 
 {% block script %}
 {{ super() }}
-    <link rel="stylesheet" href="../static/style/profile.css">
+    <link rel="stylesheet" href="/static/style/profile.css">
 {% endblock %}
 
 
@@ -14,8 +14,13 @@
     <div class="container" >
         <div class="profile shadow-lg">
 
-            <div class="profile-img">
+            <div class="profile-img" >
                 <img src="{{ user.gravatar(size=200) }}">
+                {% if current_user == user %}
+                <div class="text-center">
+                    <a href="{{ url_for('auth.change_password' )}}">Change Password</a>
+                </div>
+                {% endif %}
             </div>
 
             <div class="profile-header">

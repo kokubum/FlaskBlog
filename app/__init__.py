@@ -11,7 +11,8 @@ moment = Moment()
 bcrypt = Bcrypt()
 mail = Mail()
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login'
+login_manager.login_view = login_manager.refresh_view = 'auth.login'
+
 
 
 #Factory of the application

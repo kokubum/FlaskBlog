@@ -48,6 +48,12 @@ class User(db.Model,UserMixin):
                 self.role = Role.query.filter_by(default=True).first()
             self.avatar_hash = self.gravatar_hash()
 
+
+    def change_email(self,email):
+        self.email = email
+        self.avatar_hash = self.gravatar_hash()
+
+
     def gravatar_hash(self):
         return hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
 
@@ -82,6 +88,10 @@ class User(db.Model,UserMixin):
     def is_admin(self):
         return self.can(Permission.ADMIN)
 
+    def generate_recover_token(self,expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'],expiration)
+        return s.dumps({'recover':self.id}).decode('utf-8')
+
     def generate_confirmation_token(self,expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'],expiration)
         return s.dumps({'confirm': self.id}).decode('utf-8')
@@ -98,6 +108,7 @@ class User(db.Model,UserMixin):
     def remove_session_token(self):
         self.session_token = None
         
+        db.session.add(self)
         db.session.commit()
 
     def token_expire(self):
@@ -107,6 +118,17 @@ class User(db.Model,UserMixin):
         except:
             return True
         return False
+
+    @classmethod
+    def confirm_recover(cls,recover_token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(recover_token.encode('utf-8'))
+        except:
+            return None
+        
+        user = cls.find_by_id(data.get('recover'))
+        return user
 
     @classmethod
     def confirm_account(cls,confirmation_token):

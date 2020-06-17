@@ -1,6 +1,6 @@
 Dear {{ user.name }},
 
-To confirm your password, you only need to click in the following link:
+To confirm your account, you only need to click in the following link:
 
 {{ url_for('auth.confirm_account',token=token,_external=True) }}
 

@@ -30,7 +30,6 @@ class RegistrationForm(FlaskForm):
         user = User.find_by_username(field.data)
         if user:
             raise ValidationError('Username already registered')
-    
 
 
 
@@ -39,3 +38,44 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password',validators=[InputRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Log In')
+
+class RecoverPasswordForm(FlaskForm):
+    email = StringField('Email',validators=[InputRequired(),Email(message='Invalid email address')])
+    submit = SubmitField('Recover')
+
+    def validate_email(self,field):
+        user = User.find_by_email(field.data)
+        if not user:
+            return ValidationError('Invalid email address')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField(
+        'Password',
+        validators=[
+            InputRequired(),
+            Regexp('^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[@$!%*#?&]).*$',message="Password must contain at least: 1 Upper case letter, 1 digit and 1 special character"),Length(min=8,message="Password must contain at least 8 characters")
+        ]
+    )
+    confirm_password = PasswordField('Confirm Password',validators=[EqualTo('password',message=('Passwords must match'))])
+
+    submit = SubmitField('Reset Password')
+
+class ChangePasswordForm(FlaskForm):
+    oldpassword = PasswordField('Old Password',validators=[InputRequired()])
+    password = PasswordField(
+        'New Password',
+        validators=[
+            InputRequired(),
+            Regexp('^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[@$!%*#?&]).*$',message="Password must contain at least: 1 Upper case letter, 1 digit and 1 special character"),Length(min=8,message="Password must contain at least 8 characters")
+        ]
+    )
+    confirm_password = PasswordField('Confirm New Password',validators=[EqualTo('password',message=('Passwords must match'))])
+    submit = SubmitField('Change Password')
+
+    def __init__(self,user,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.user = user
+
+    def validate_oldpassword(self,field):
+        if not self.user.check_password(field.data):
+            raise ValidationError('Invalid Password')
