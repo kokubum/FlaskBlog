@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+
+{% block script %}
+{{ super() }}
+    <link rel="stylesheet" href="/static/style/auth.css">
+{% endblock %}
+
+
+{% block content %}
+
+<section class="container">
+    {% block form %}{% endblock %}
+</section>
+
+{% endblock %}

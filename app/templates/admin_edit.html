@@ -1,17 +1,9 @@
-{% extends "layout.html" %}
+{% extends "form_layout.html" %}
 
 {% block title %}FlaskBlog - Edit Profile [ADMIN]{% endblock %} 
 
-{% block script %}
-{{ super() }}
-    <link rel="stylesheet" href="/static/style/auth.css">
-{% endblock %}
 
-
-{% block content %}
-
-
-<section class="container">
+{% block form %}
     <div class="form-wrap shadow-lg">
 
         <h1 class="title-form">Edit Profile</h1>
@@ -36,10 +28,6 @@
         </form>
    
     </div>
-   
-
-</section>
-
 
 
 {% endblock %}

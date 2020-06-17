@@ -46,7 +46,7 @@ def error_403(error):
     return render_template('error/403.html'),403
 
 
-@main.route('/admin-edit/<int:id>',methods=['GET','POST'])
+@main.route('/user/admin-edit/<int:id>',methods=['GET','POST'])
 @login_required
 @admin_required
 def edit_admin(id):
@@ -66,13 +66,13 @@ def edit_admin(id):
         return redirect(url_for('main.profile',username=user.username))
     return render_template('admin_edit.html',form=form,user=user)
 
-@main.route('/<username>')
+@main.route('/user/<username>')
 def profile(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('profile.html',user=user)
 
 
-@main.route('/edit',methods=['GET','POST'])
+@main.route('/user/edit',methods=['GET','POST'])
 @login_required
 def edit_profile():
     form = EditProfileForm()

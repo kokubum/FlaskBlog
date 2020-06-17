@@ -1,15 +1,9 @@
-{% extends "layout.html" %}
+{% extends "form_layout.html" %}
 
 {% block title %}FlaskBlog - Log In{% endblock %} 
 
-{% block script %}
-{{ super() }}
-    <link rel="stylesheet" href="/static/style/auth.css">
-{% endblock %}
 
-{% block content %}
-
-<section class="container">
+{% block form %}
     <div class="form-wrap shadow-lg">
 
         <h1 class="title-form">Log In</h1>
@@ -34,11 +28,4 @@
    
     </div>
     <p>Don't have an account yet? <a href="#">Register Here</a></p>
-
-</section>
-
-
-
-
-
 {% endblock %}

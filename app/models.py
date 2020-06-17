@@ -50,8 +50,9 @@ class User(db.Model,UserMixin):
 
 
     def change_email(self,email):
-        self.email = email
-        self.avatar_hash = self.gravatar_hash()
+        if email != self.email:
+            self.email = email
+            self.avatar_hash = self.gravatar_hash()
 
 
     def gravatar_hash(self):
