@@ -14,7 +14,7 @@
             {{ render_field(form.first_name,placeholder=user.name.split()[0]) }}
             {{ render_field(form.last_name,placeholder=user.name.split()[1]) }}
             {{ render_field(form.location,placeholder=user.location) }}
-            {{ render_field(form.about_me,class_="about_me",placeholder=user.about_me) }}
+            {{ render_field(form.about_me,class_="text_area",placeholder=user.about_me) }}
             {{ render_field(form.location,placeholder=user.location) }}
             {{ render_field(form.email,placeholder=user.email) }}
             {{ render_field(form.username,placeholder=user.username) }}

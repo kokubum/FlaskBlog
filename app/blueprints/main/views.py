@@ -1,37 +1,18 @@
-from .forms import EditProfileAdminForm,EditProfileForm
+from .forms import EditProfileAdminForm,EditProfileForm,PostForm
 from flask import render_template,redirect,url_for,flash
 from flask_login import fresh_login_required,login_required
 from ..auth.decorators import permission_required,admin_required
-from app.models import Permission,User,Role
+from app.models import Permission,User,Role,Post
 from . import main
 from app import db
 
 @main.route('/')
 @main.route('/home')
 def home():
-    return render_template('home.html')
 
-@main.route('/fresh-session')
-@fresh_login_required
-def teste_fresh():
-    return "For Fresh Session"
+    posts = Post.query.order_by(Post.time_stamp.desc()).all()
+    return render_template('home.html',posts=posts)
 
-@main.route('/normal-session')
-@login_required
-def teste_normal():
-    return "For Normal Session"
-
-@main.route('/admin')
-@login_required
-@admin_required
-def for_admins_only():
-    return "For Admin"
-
-@main.route('/moderate')
-@login_required
-@permission_required(Permission.MODERATE)
-def for_moderates_only():
-    return "For Moderates"
 
 @main.app_errorhandler(404)
 def error_404(error):
@@ -86,3 +67,19 @@ def edit_profile():
         return redirect(url_for('main.profile',username=current_user.username))
 
     return render_template('edit_profile.html',form=form)
+
+@main.route('/post',methods=['GET','POST'])
+@login_required
+@permission_required(Permission.WRITE)
+def post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(
+            title = form.title.data,
+            body = form.body.data,
+            author = current_user._get_current_object()
+        )
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('main.home'))
+    return render_template('post.html',form=form)

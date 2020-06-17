@@ -1,0 +1,30 @@
+.post-container{
+    padding: 20px;
+    overflow: auto;
+    margin-bottom: 15px;
+}
+
+
+.profile-post{  
+    
+    max-width: 80px;
+    float: left;
+    margin-right: 20px;
+   
+}
+
+.post-content{
+    height: 120px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+}
+
+.profile-post img{
+    width: 100%;
+}
+
+.btn-outline-primary{
+    float:right;
+    clear: right;
+}
+

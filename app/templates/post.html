@@ -1,0 +1,18 @@
+{% extends "form_layout.html" %}
+
+{% block title %}FlaskBlog - Post{% endblock %} 
+
+{% block form %}
+    <div class="form-wrap shadow-lg">
+        <h1 class="title-form">Post</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {% from "macros.html" import render_field %}
+            {{ render_field(form.title)}}
+            {{ render_field(form.body,class_="text_area") }}
+            {{ form.submit(class_="btn btn-success mb-3") }}
+            
+        </form>
+
+    </div>
+{% endblock %}

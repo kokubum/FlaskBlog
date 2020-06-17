@@ -1,3 +1,46 @@
 {% extends "layout.html" %}
 
 {% block title %}FlaskBlog - Home{% endblock %}
+
+{% block script %}
+{{ super() }}
+    <link rel="stylesheet" href="/static/style/home.css">
+{% endblock %}
+
+
+{% block content %}
+<main role="main" class="container">
+    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded shadow-lg">
+        <div class="lh-100" >
+            <h1 class="text-white">Posts</h4>
+            <small>Since 2020</small>
+        </div>
+        
+        <div class="lh-100 ml-auto">
+            <a href="{{ url_for('main.post' )}}" class="btn btn-primary">Create a Post</a>
+        </div>
+    </div>
+    {% for post in posts %}
+    <div class="bg-white rounded shadow-lg post-container">
+        <div class="profile-post">
+            <img src="{{ post.author.gravatar(80) }}">
+        </div>
+        <div class='post-content'>
+           <h2>{{post.title}}</h2>
+           <h6 >{{ post.body }}</h6>
+        </div>
+        <hr>
+        <h6 class="font-weight-bold d-inline">Posted by 
+            <a href="{{ url_for('main.profile', username = post.author.username)}}">{{ post.author.username}}</a> 
+            {{ moment(post.time_stamp).fromNow()}}
+        </h6>
+        <a href="#" class="btn btn-outline-primary">Take a look</a>
+        
+            
+    </div>  
+    {% endfor %}
+
+</main>
+
+
+{% endblock %}

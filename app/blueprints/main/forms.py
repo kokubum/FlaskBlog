@@ -37,3 +37,8 @@ class EditProfileAdminForm(FlaskForm):
         user = User.find_by_username(field.data)
         if field.data!=self.user.username and user:
             raise ValidationError('Username already registered')
+
+class PostForm(FlaskForm):
+    title = StringField('Title',validators=[InputRequired()])
+    body = TextAreaField('Content',validators=[InputRequired()])
+    submit = SubmitField('Post')
