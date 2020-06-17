@@ -1,5 +1,5 @@
 from .forms import EditProfileAdminForm,EditProfileForm,PostForm
-from flask import render_template,redirect,url_for,flash
+from flask import render_template,redirect,url_for,flash,current_app,request
 from flask_login import fresh_login_required,login_required
 from ..auth.decorators import permission_required,admin_required
 from app.models import Permission,User,Role,Post
@@ -10,8 +10,14 @@ from app import db
 @main.route('/home')
 def home():
 
-    posts = Post.query.order_by(Post.time_stamp.desc()).all()
-    return render_template('home.html',posts=posts)
+    page = request.args.get('page',1,type=int)
+    pagination = Post.query.order_by(Post.time_stamp.desc()).paginate(
+        page,
+        per_page = current_app.config['POSTS_PER_PAGE'],
+        error_out=False
+    )
+    posts = pagination.items
+    return render_template('home.html',posts=posts,pagination=pagination)
 
 
 @main.app_errorhandler(404)

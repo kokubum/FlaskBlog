@@ -12,3 +12,35 @@
     {% endif %}
 </div>
 {% endmacro %}
+
+
+{% macro pagination_widget(pagination,endpoint) %}
+<ul class="pagination mx-auto">
+    
+    <li  class="page-item {% if not pagination.has_prev %}disabled{% endif %}" >
+      <a href="{% if pagination.has_prev %}{{ url_for(endpoint,page=pagination.page-1,**kwargs)}}{% endif %}"class="page-link">Previous</a>
+    </li>
+  
+    {% for p in pagination.iter_pages()%}
+        {% if p %}
+        <li class="page-item {% if p==pagination.page %}active{% endif %}">
+            <a class="page-link" href="{{ url_for(endpoint,page=p,**kwargs)}}">{{ p }}</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">&hellip;</a>
+        </li>
+        {% endif %}
+    {% endfor %}
+    
+    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+            
+        <a class="page-link" href="{% if pagination.has_next %}{{ url_for(endpoint,page=pagination.page+1,**kwargs)}}{% endif%}">Next</a>
+    </li>
+</ul>
+
+
+
+
+
+{% endmacro %}

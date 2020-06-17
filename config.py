@@ -18,7 +18,7 @@ class Config:
     MAIL_SENDER = '[ADMIN]<admin@blog.com>'
     
     ADMIN_BLOG = os.environ.get('ADMIN_BLOG')
-
+    POSTS_PER_PAGE = int(os.environ.get('POSTS_PER_PAGE','20'))
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
