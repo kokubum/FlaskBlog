@@ -1,4 +1,5 @@
 from wtforms import StringField,TextAreaField,SubmitField,BooleanField,SelectField
+from flask_pagedown.fields import PageDownField
 from wtforms.validators import Length,Regexp,InputRequired,Email
 from flask_wtf import FlaskForm
 from app.models import Role,User
@@ -40,5 +41,9 @@ class EditProfileAdminForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('Title',validators=[InputRequired()])
-    body = TextAreaField('Content',validators=[InputRequired()])
+    body = PageDownField('Content',validators=[InputRequired()])
     submit = SubmitField('Post')
+
+class CommentForm(FlaskForm):
+    body = TextAreaField('Content',validators=[InputRequired()])
+    submit = SubmitField('Comment') 

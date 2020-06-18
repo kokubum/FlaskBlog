@@ -1,10 +1,10 @@
 {% extends "form_layout.html" %}
 
-{% block title %}FlaskBlog - Post{% endblock %} 
+{% block title %}FlaskBlog - Create Post{% endblock %} 
 
 {% block form %}
     <div class="form-wrap shadow-lg">
-        <h1 class="title-form">Post</h1>
+        <h1 class="title-form">Create a Post</h1>
         <form method="POST">
             {{ form.hidden_tag() }}
             {% from "macros.html" import render_field %}

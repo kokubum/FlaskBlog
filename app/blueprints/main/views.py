@@ -1,8 +1,9 @@
-from .forms import EditProfileAdminForm,EditProfileForm,PostForm
+from .forms import EditProfileAdminForm,EditProfileForm,PostForm,CommentForm
 from flask import render_template,redirect,url_for,flash,current_app,request
-from flask_login import fresh_login_required,login_required
+from flask_login import fresh_login_required,login_required,current_user
 from ..auth.decorators import permission_required,admin_required
-from app.models import Permission,User,Role,Post
+from app.models import Permission,User,Role,Post,Comment
+from datetime import datetime
 from . import main
 from app import db
 
@@ -18,6 +19,35 @@ def home():
     )
     posts = pagination.items
     return render_template('home.html',posts=posts,pagination=pagination)
+
+@main.route('/post/<int:id>',methods=['GET','POST'])
+def show_post(id):
+    
+    post = Post.query.filter_by(id=id).first()
+    comments = post.comments.order_by(Comment.time_stamp.desc())
+    form = CommentForm()
+    if form.validate_on_submit() and current_user.can(Permission.COMMENT):
+        comment = Comment(
+            body = form.body.data,
+            time_stamp = datetime.utcnow(),
+            author = current_user._get_current_object(),    
+            post = post
+        )
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('main.show_post',id=post.id))
+    return render_template('show_post.html',post=post,comments=comments,form=form)
+
+@main.route('/post/<int:id>/<int:id_comment>')
+@login_required
+def delete_comment(id,id_comment):
+    comment = Comment.query.filter_by(id=id_comment).first()
+    if current_user.is_admin() or \
+        comment.author == current_user or \
+        (current_user.can(Permission.MODERATE) and not comment.author.is_admin()):
+        db.session.delete(comment)
+        db.session.commit()
+    return redirect(url_for('main.show_post',id=id))
 
 
 @main.app_errorhandler(404)

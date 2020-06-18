@@ -26,15 +26,16 @@
             <img src="{{ post.author.gravatar(80) }}">
         </div>
         <div class='post-content'>
-           <h2>{{post.title}}</h2>
-           <h6 >{{ post.body }}</h6>
+           <h2 class="bg-dark rounded pl-3 text-white"><strong>{{post.title}}</strong></h2>
+           
+           <h6 >{{ post.body_html | safe }}</h6>
         </div>
         <hr>
         <h6 class="font-weight-bold d-inline">Posted by 
             <a href="{{ url_for('main.profile', username = post.author.username)}}">{{ post.author.username}}</a> 
             {{ moment(post.time_stamp).fromNow()}}
         </h6>
-        <a href="#" class="btn btn-outline-primary">Take a look</a>
+        <a href="{{ url_for('main.show_post',id=post.id)}}" class="btn btn-outline-primary">Take a look</a>
         
             
     </div>  

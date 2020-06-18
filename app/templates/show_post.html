@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+
+{% block title %}FlaskBlog - Post{% endblock %}
+
+
+{% block content %}
+<main role="main" class="container">
+    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded box-shadow">
+        <div class= >
+            <h1 class="text-white text-center">{{ post.title }}</h4>
+            <h6>
+                Posted {{ moment(post.time_stamp).fromNow() }}
+            </h6>
+        </div>
+        <div class="lh-100 ml-auto">
+            <h6>Author: 
+                <a href="{{ url_for('main.profile',username=post.author.username)}}">{{ post.author.username}}</a>
+            </h6>
+        </div>
+        
+    </div>
+
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <p>{{ post.body_html | safe }}</p>
+    </div>
+
+    <h3>Comments ({{comments.all() | length}})</h3>
+    {% for comment in comments %}
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <p>{{ comment.body }}</p>
+        <p class="mb-0">
+            <strong><img src="{{ comment.author.gravatar(size=20) }}" class="mx-auto img-fluid img-circle inline-block" alt="avatar">
+                <a href="{{ url_for('main.profile',username=comment.author.username) }}"> 
+                    {{ comment.author.username }}
+                </a>
+            </strong>
+        </p>
+        
+        <p class="text-black-50 mb-0 d-inline">Commented {{ moment(comment.time_stamp).fromNow()}}</p>
+        {% if current_user.is_admin() or 
+            current_user == comment.author or 
+            (current_user.can(Permission.MODERATE) and not comment.author.is_admin()) %}
+        <a class="float-right"href="#">Delete</a>
+        {% endif %}
+    </div>
+    
+    
+    
+    {% endfor %}
+    
+    <h3>Write a comment</h3>
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.body(class_="w-100 mb-3") }}  
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+        
+    </div>
+
+
+</main>
+
+
+{% endblock %}

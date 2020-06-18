@@ -14,8 +14,8 @@
     <div class="container" >
         <div class="profile shadow-lg">
 
-            <div class="profile-img" >
-                <img src="{{ user.gravatar(size=200) }}">
+            <div class="profile-img">
+                <img src="{{ user.gravatar(size=256) }}">
                 {% if current_user == user %}
                 <div class="text-center">
                     <a href="{{ url_for('auth.change_password' )}}">Change Password</a>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="profile-header">
-                <h1 class="font-weight-bold">{{user.username}}</h1>
+                <h3 class="font-weight-bold">{{user.username}}</h3>
             
                 {% if user.name or user.location %}
                 
@@ -61,6 +61,18 @@
             </div>
             
             <hr>
+
+            <div class="profile-posts">
+                <h4 class="font-weight-bold">My Posts</h4>
+                <div class="list-group">
+
+                    {% for post in user.posts %}
+                    <a href="{{ url_for('main.show_post',id=post.id)}}" class="list-group-item list-group-item-action">{{post.title}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+         
 
             {% if current_user == user %}
             <a class="btn btn-outline-primary col-lg-12" href="{{ url_for('main.edit_profile') }}">Edit Profile</a>
