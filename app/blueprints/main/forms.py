@@ -47,3 +47,9 @@ class PostForm(FlaskForm):
 class CommentForm(FlaskForm):
     body = TextAreaField('Content',validators=[InputRequired()])
     submit = SubmitField('Comment') 
+
+class EditPostForm(FlaskForm):
+    title = StringField('Title',validators=[InputRequired()])
+    body = PageDownField('Content',validators=[InputRequired()])
+
+    submit = SubmitField('Edit Post')

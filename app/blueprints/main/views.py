@@ -1,5 +1,5 @@
-from .forms import EditProfileAdminForm,EditProfileForm,PostForm,CommentForm
-from flask import render_template,redirect,url_for,flash,current_app,request
+from .forms import EditProfileAdminForm,EditProfileForm,PostForm,CommentForm,EditPostForm
+from flask import render_template,redirect,url_for,flash,current_app,request,abort
 from flask_login import fresh_login_required,login_required,current_user
 from ..auth.decorators import permission_required,admin_required
 from app.models import Permission,User,Role,Post,Comment
@@ -49,6 +49,22 @@ def delete_comment(id,id_comment):
         db.session.commit()
     return redirect(url_for('main.show_post',id=id))
 
+@main.route('/post/<int:id>/edit-post',methods=['GET','POST'])
+@login_required
+def edit_post(id):
+    post = Post.query.filter_by(id=id).first()
+    if current_user != post.author and not current_user.is_admin():
+        abort(403)
+    form = EditPostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.body = form.body.data
+        db.session.add(post)
+        db.session.commit()
+        flash('The post has been updated')
+        return redirect(url_for('main.show_post',id=id))
+    form.body.data = post.body_html
+    return render_template('edit_post.html',form=form,post=post)
 
 @main.app_errorhandler(404)
 def error_404(error):

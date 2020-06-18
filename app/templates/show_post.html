@@ -17,6 +17,9 @@
             <h6>Author: 
                 <a href="{{ url_for('main.profile',username=post.author.username)}}">{{ post.author.username}}</a>
             </h6>
+            {% if current_user == post.author or current_user.is_admin() %}
+            <a class="btn btn-primary" href="{{ url_for('main.edit_post',id=post.id)}}">Edit Post</a>
+            {% endif %}
         </div>
         
     </div>
@@ -26,6 +29,7 @@
     </div>
 
     <h3>Comments ({{comments.all() | length}})</h3>
+    <hr>
     {% for comment in comments %}
     <div class="my-3 p-3 bg-white rounded box-shadow">
         <p>{{ comment.body }}</p>
@@ -41,7 +45,7 @@
         {% if current_user.is_admin() or 
             current_user == comment.author or 
             (current_user.can(Permission.MODERATE) and not comment.author.is_admin()) %}
-        <a class="float-right"href="#">Delete</a>
+        <a class="float-right"href="{{ url_for('main.delete_comment',id=post.id,id_comment=comment.id)}}">Delete</a>
         {% endif %}
     </div>
     
