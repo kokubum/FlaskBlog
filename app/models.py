@@ -15,6 +15,13 @@ def load_user(user_token):
         return None
     return user
 
+class Follow(db.Model):
+    __tablename__ = 'followers'
+    id = db.Column(db.Integer,primary_key=True)
+    follower_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    followed_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+
+    time_stamp = db.Column(db.Integer,default=datetime.utcnow)
 
 class User(db.Model,UserMixin):
 
@@ -40,6 +47,22 @@ class User(db.Model,UserMixin):
     posts = db.relationship('Post',backref='author',lazy='dynamic',cascade='all,delete-orphan')
     comments = db.relationship('Comment',backref='author',lazy='dynamic',cascade='all,delete-orphan')
 
+    followed = db.relationship(
+        'Follow',
+        foreign_keys=[Follow.follower_id],
+        backref = db.backref('follower',lazy='joined'),
+        lazy='dynamic',
+        cascade = 'all,delete-orphan'
+    )
+    follower = db.relationship(
+        'Follow',
+        foreign_keys=[Follow.followed_id],
+        backref = db.backref('followed',lazy='joined'),
+        lazy='dynamic',
+        cascade = 'all,delete-orphan'
+    )
+
+
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
         if self.role is None:
@@ -54,6 +77,25 @@ class User(db.Model,UserMixin):
         if email != self.email:
             self.email = email
             self.avatar_hash = self.gravatar_hash()
+
+    def follow(self,user):
+        if not self.is_following(user):
+            f = Follow(follower = self,followed=user)
+            db.session.add(f)
+            db.session.commit()
+    
+    def unfollow(self,user):
+        f = self.followed.query.filter_by(followed_id=user.id).first()
+        if f:
+            db.session.delete(f)
+            db.session.commit()
+
+    def is_following(self,user):
+        return self.followed.query.filter_by(followed_id=user.id).first() is not None
+
+
+    def is_followed_by(self,user):
+        return self.followers.query.filter_by(follower_id=user.id).first() is not None
 
 
     def gravatar_hash(self):
@@ -254,9 +296,7 @@ class Post(db.Model):
                 tags=allowed_tags,
                 strip=True
             )
-        )
-
-    
+        )  
     
     def __repr__(self):
         return f'Post<{self.title}>'
@@ -275,3 +315,8 @@ class Comment(db.Model):
 
     def __repr__(self):
         return f'Comment<{self.author_id,self.post_id}>'
+
+
+
+
+
