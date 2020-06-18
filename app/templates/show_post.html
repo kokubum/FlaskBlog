@@ -6,6 +6,7 @@
 
 {% block content %}
 <main role="main" class="container">
+    
     <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded box-shadow">
         <div class= >
             <h1 class="text-white text-center">{{ post.title }}</h4>
@@ -28,7 +29,7 @@
         <p>{{ post.body_html | safe }}</p>
     </div>
 
-    <h3>Comments ({{comments.all() | length}})</h3>
+    <h3>Comments ({{comments.count() }})</h3>
     <hr>
     {% for comment in comments %}
     <div class="my-3 p-3 bg-white rounded box-shadow">

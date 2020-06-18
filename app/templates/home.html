@@ -10,6 +10,7 @@
 
 {% block content %}
 <main role="main" class="container">
+    
     <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded shadow-lg">
         <div class="lh-100" >
             <h1 class="text-white">Posts</h4>
@@ -20,6 +21,13 @@
             <a href="{{ url_for('main.post' )}}" class="btn btn-primary">Create a Post</a>
         </div>
     </div>
+    
+    {% if current_user.is_authenticated %}
+    <div class="nav nav-tabs" >
+        <a class="text nav-item nav-link {% if not show_followed %}active{% endif %} " href="{{ url_for('main.show_all')}}">ALL</a>
+        <a class="text nav-item nav-link {% if show_followed %}active{% endif %}" href="{{ url_for('main.followed') }}">FOLLOWED</a>
+    </div>
+    {% endif %}
     {% for post in posts %}
     <div class="bg-white rounded shadow-lg post-container">
         <div class="profile-post">

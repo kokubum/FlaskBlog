@@ -64,3 +64,14 @@ def comments(count = 200):
             i+=1
             db.session.add(c)
     db.session.commit()
+
+def follows():
+    user_count = User.query.count()
+    users = User.query.all()
+    for user in users:
+        for i in range(user_count):
+            following_user = users[i]
+            user.follow(following_user)
+            db.session.add(user)
+    db.session.commit()
+

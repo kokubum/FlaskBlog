@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}FlaskBlog - Follow{% endblock %} 
+
+{% block script %}
+{{ super() }}
+    <link rel="stylesheet" href="/static/style/follow.css">
+{% endblock %}
+
+
+{% block content %}
+<div class="container bootstrap snippet">
+    <h1>{{title}} {{user.username}} </h1>
+    <div class="row">
+        <div class="col-lg-12" >
+            
+            <div class="main-box-body clearfix">
+                
+                <div class="table-responsive">
+                    <table class="table user-list">
+                        
+                        <tbody>
+                            {% for f in followers%}
+                            <tr>
+                                <td>
+                                    <img class="mt-2 ml-2"src="{{ f['user'].gravatar(size=50)}}">
+                                    <a href="{{ url_for('main.profile',username=f['user'].username)}}" class="user-link">{{f['user'].username}}</a>
+                                    <span class="user-subhead">{{f['user'].name}}</span>
+                                </td>
+                                
+                                <td>Since {{moment(f['time_stamp']).fromNow()}}</td>
+                                {% if current_user.is_admin() %}
+                                <td>
+                                    <a href="mailto:{{f['user'].email}}">{{f['user'].email}}</a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    {% from "macros.html" import pagination_widget %}
+    <div class="mt-3 pagination">
+        {{ pagination_widget(pagination,endpoint,username=user.username) }}
+    </div>
+</div>
+
+
+
+
+{% endblock %}

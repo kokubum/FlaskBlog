@@ -21,7 +21,7 @@ class Follow(db.Model):
     follower_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     followed_id = db.Column(db.Integer,db.ForeignKey('users.id'))
 
-    time_stamp = db.Column(db.Integer,default=datetime.utcnow)
+    time_stamp = db.Column(db.DateTime,default=datetime.utcnow)
 
 class User(db.Model,UserMixin):
 
@@ -72,6 +72,10 @@ class User(db.Model,UserMixin):
                 self.role = Role.query.filter_by(default=True).first()
             self.avatar_hash = self.gravatar_hash()
 
+    @property
+    def followed_posts(self):
+        return Post.query.join(Follow,Follow.followed_id==Post.author_id).filter(Follow.follower_id==self.id)
+
 
     def change_email(self,email):
         if email != self.email:
@@ -79,23 +83,23 @@ class User(db.Model,UserMixin):
             self.avatar_hash = self.gravatar_hash()
 
     def follow(self,user):
-        if not self.is_following(user):
+        if not self.is_following(user) :
             f = Follow(follower = self,followed=user)
             db.session.add(f)
             db.session.commit()
     
     def unfollow(self,user):
-        f = self.followed.query.filter_by(followed_id=user.id).first()
+        f = self.followed.filter_by(followed_id=user.id).first()
         if f:
             db.session.delete(f)
             db.session.commit()
 
     def is_following(self,user):
-        return self.followed.query.filter_by(followed_id=user.id).first() is not None
+        return self.followed.filter_by(followed_id=user.id).first() is not None
 
 
     def is_followed_by(self,user):
-        return self.followers.query.filter_by(follower_id=user.id).first() is not None
+        return self.followers.filter_by(follower_id=user.id).first() is not None
 
 
     def gravatar_hash(self):
