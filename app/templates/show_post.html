@@ -3,6 +3,10 @@
 
 {% block title %}FlaskBlog - Post{% endblock %}
 
+{% block script %}
+{{ super() }}
+    <link rel="stylesheet" href="/static/style/comment.css">
+{% endblock %}
 
 {% block content %}
 <main role="main" class="container">
@@ -29,31 +33,6 @@
         <p>{{ post.body_html | safe }}</p>
     </div>
 
-    <h3>Comments ({{comments.count() }})</h3>
-    <hr>
-    {% for comment in comments %}
-    <div class="my-3 p-3 bg-white rounded box-shadow">
-        <p>{{ comment.body }}</p>
-        <p class="mb-0">
-            <strong><img src="{{ comment.author.gravatar(size=20) }}" class="mx-auto img-fluid img-circle inline-block" alt="avatar">
-                <a href="{{ url_for('main.profile',username=comment.author.username) }}"> 
-                    {{ comment.author.username }}
-                </a>
-            </strong>
-        </p>
-        
-        <p class="text-black-50 mb-0 d-inline">Commented {{ moment(comment.time_stamp).fromNow()}}</p>
-        {% if current_user.is_admin() or 
-            current_user == comment.author or 
-            (current_user.can(Permission.MODERATE) and not comment.author.is_admin()) %}
-        <a class="float-right"href="{{ url_for('main.delete_comment',id=post.id,id_comment=comment.id)}}">Delete</a>
-        {% endif %}
-    </div>
-    
-    
-    
-    {% endfor %}
-    
     <h3>Write a comment</h3>
     <div class="my-3 p-3 bg-white rounded box-shadow">
         <form method="POST">
@@ -62,6 +41,47 @@
             {{ form.submit(class_="btn btn-primary") }}
         </form>
         
+    </div>
+
+    <h3>Comments ({{ enable_comments }})</h3>
+    <hr>
+    {% for comment in comments %}
+
+    {% if not comment.disabled or current_user.can(Permission.MODERATE)%}
+
+    <div class="my-3 p-3 bg-white rounded box-shadow {{ 'comments-d' if comment.disabled }}">
+        <p>{{ comment.body }}</p>
+
+            {% if current_user.can(Permission.MODERATE) %}
+                {% if comment.disabled %}
+                <a class ="float-right btn btn-outline-primary" href="{{ url_for('main.moderate_enable',id=comment.id,page=page,post_page='true')}}">
+                    Enable
+                </a>
+                {% else %}
+                <a class ="float-right btn btn-danger" href="{{ url_for('main.moderate_disable',id=comment.id,page=page,post_page='true')}}">
+                    Disable
+                </a>
+                {% endif %}
+            {% endif %}
+
+        <p class="mb-0">
+            <strong><img src="{{ comment.author.gravatar(size=20) }}" class="mx-auto img-fluid img-circle inline-block" alt="avatar">
+                <a href="{{ url_for('main.profile',username=comment.author.username) }}"> 
+                    {{ comment.author.username }}
+                </a>
+            </strong>
+        </p>
+        
+        <p class="text-black-50 mb-0 ">Commented {{ moment(comment.time_stamp).fromNow()}}</p> 
+    </div>
+    {% endif %}
+    
+    
+    {% endfor %}
+    
+    {% from "macros.html" import pagination_widget %}
+    <div class="pagination">
+        {{ pagination_widget(pagination,endpoint,id = post.id) }}
     </div>
 
 

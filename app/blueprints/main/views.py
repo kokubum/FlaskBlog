@@ -27,7 +27,13 @@ def home():
         error_out=False
     )
     posts = pagination.items
-    return render_template('home.html',posts=posts,pagination=pagination,show_followed=show_followed)
+    return render_template(
+        'home.html',
+        posts=posts,
+        pagination=pagination,
+        show_followed=show_followed,
+        endpoint='main.home'
+        )
 
 @main.route('/all')
 @login_required
@@ -47,30 +53,42 @@ def followed():
 def show_post(id):
     
     post = Post.query.filter_by(id=id).first()
-    comments = post.comments.order_by(Comment.time_stamp.desc())
     form = CommentForm()
-    if form.validate_on_submit() and current_user.can(Permission.COMMENT):
-        comment = Comment(
-            body = form.body.data,
-            time_stamp = datetime.utcnow(),
-            author = current_user._get_current_object(),    
-            post = post
+    if form.validate_on_submit():
+        if current_user.can(Permission.COMMENT):
+            comment = Comment(
+                body = form.body.data,
+                time_stamp = datetime.utcnow(),
+                author = current_user._get_current_object(),    
+                post = post
+            )
+            db.session.add(comment)
+            db.session.commit()
+        else:
+            flash('You don\'t have permission to comment')
+        return redirect(url_for('main.show_post',id=post.id,page=-1))
+    page = request.args.get('page',1,type=int)
+    if page == -1:
+        page = ((post.comments.count() - 1)//current_app.config['COMMENTS_PER_PAGE'])+1 
+    pagination = post.comments.order_by(Comment.time_stamp.asc()).paginate(
+        page,
+        per_page = current_app.config['COMMENTS_PER_PAGE'],
+        error_out = False
+    )
+    
+    comments = pagination.items
+    enable_comments = post.comments.filter_by(disabled=False).count()
+    return render_template(
+        'show_post.html',
+        post=post,
+        comments=comments,
+        form=form,
+        pagination=pagination,
+        endpoint='main.show_post',
+        enable_comments = enable_comments,
+        page=page
         )
-        db.session.add(comment)
-        db.session.commit()
-        return redirect(url_for('main.show_post',id=post.id))
-    return render_template('show_post.html',post=post,comments=comments,form=form)
 
-@main.route('/post/<int:id>/<int:id_comment>')
-@login_required
-def delete_comment(id,id_comment):
-    comment = Comment.query.filter_by(id=id_comment).first()
-    if current_user.is_admin() or \
-        comment.author == current_user or \
-        (current_user.can(Permission.MODERATE) and not comment.author.is_admin()):
-        db.session.delete(comment)
-        db.session.commit()
-    return redirect(url_for('main.show_post',id=id))
 
 @main.route('/post/<int:id>/edit-post',methods=['GET','POST'])
 @login_required
@@ -210,6 +228,53 @@ def followed_by(username):
         endpoint='main.followed_by',
         pagination=pagination
     )
+
+@main.route('/moderate')
+@login_required
+@permission_required(Permission.MODERATE)
+def moderate():
+    page = request.args.get('page',1,type=int)
+    pagination = Comment.query.order_by(Comment.time_stamp.desc()).paginate(
+        page,
+        per_page = current_app.config['COMMENTS_PER_PAGE'],
+        error_out=False
+    )
+    comments = pagination.items
+    return render_template(
+        'moderate.html',
+        comments=comments,
+        pagination=pagination,
+        endpoint='main.moderate',
+        page=page
+    )
+
+@main.route('/moderate/enable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE)
+def moderate_disable(id):
+
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = True
+    db.session.add(comment)
+    db.session.commit()
+    page = request.args.get('page',1,type=int)
+    if request.args.get('post_page'):
+        return redirect(url_for('main.show_post',id=comment.post_id,page=page))
+
+    return redirect(url_for('main.moderate',page=page))
+
+@main.route('/moderate/disable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE)
+def moderate_enable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = False
+    db.session.add(comment)
+    db.session.commit()
+    page = request.args.get('page',1,type=int)
+    if request.args.get('post_page'):
+        return redirect(url_for('main.show_post',id=comment.post_id,page=page))
+    return redirect(url_for('main.moderate',page=page))
 
 @main.app_errorhandler(404)
 def error_404(error):

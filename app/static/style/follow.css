@@ -2,14 +2,6 @@
     padding: 20px  !important;
 }
 
-.table a.table-link.danger {
-    color: #e74c3c;
-}
-.label {
-    border-radius: 3px;
-    font-size: 0.875em;
-    font-weight: 600;
-}
 .user-list tbody td .user-subhead {
     font-size: 0.875em;
     font-style: italic;
@@ -20,6 +12,7 @@
     padding-top: 3px;
     margin-left: 60px;
 }
+
 a {
     color: #3498db;
     outline: none!important;
@@ -48,4 +41,10 @@ a {
     border-top: 1px solid #e7ebee;
     padding: 12px 8px;
 }
-                                    
+.table-comment-r{
+    width: 15%;
+}
+              
+.table-comment-l{
+    width: 85%;
+}

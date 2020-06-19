@@ -6,8 +6,8 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    REMEMBER_COOKIE_DURATION = os.environ.get('REMEMBER_COOKIE_DURATION',timedelta(minutes=5))
-    
+    REMEMBER_COOKIE_DURATION = os.environ.get('REMEMBER_COOKIE_DURATION',timedelta(minutes=30))
+   
 
     #Email Configuration
     MAIL_PORT = int(os.environ.get('MAIL_PORT','587'))
@@ -20,6 +20,7 @@ class Config:
     ADMIN_BLOG = os.environ.get('ADMIN_BLOG')
     POSTS_PER_PAGE = int(os.environ.get('POSTS_PER_PAGE','20'))
     FOLLOWERS_PER_PAGE = int(os.environ.get('FOLLOWERS_PER_PAGE','20'))
+    COMMENTS_PER_PAGE = int(os.environ.get('COMMENTS_PER_PAGE','10'))
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
