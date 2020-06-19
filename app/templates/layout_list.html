@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block script %}
+{{ super() }}
+    <link rel="stylesheet" href="/static/style/follow.css">
+{% endblock %}
+
+
+{% block content %}
+<div class="container bootstrap snippet">
+    <h1>{{ title }}</h1>
+    <div class="row">
+        <div class="col-lg-12" >
+            
+            <div class="main-box-body clearfix">
+                
+                <div class="table-responsive">
+                    <table class="table user-list">
+                        
+                        <tbody>
+                           {% block list %}
+                           {% endblock %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    {% block pagination %}
+    {% from "macros.html" import pagination_widget %}
+    <div class="mt-3 pagination"> 
+        {{ pagination_widget(pagination,endpoint) }} 
+    </div>
+    {% endblock %}
+</div>
+
+
+
+
+{% endblock %}

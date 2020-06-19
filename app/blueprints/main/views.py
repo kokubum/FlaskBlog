@@ -202,7 +202,7 @@ def followers(username):
         'followers.html',
         followers=follows,
         user=user,
-        title="Followers Of",
+        title=f"Followers Of {user.username}",
         endpoint='main.followers',
         pagination=pagination
     )
@@ -224,7 +224,7 @@ def followed_by(username):
         'followers.html',
         followers=follows,
         user=user,
-        title="Followed By",
+        title=f"Followed By {user.username}",
         endpoint='main.followed_by',
         pagination=pagination
     )
@@ -245,7 +245,8 @@ def moderate():
         comments=comments,
         pagination=pagination,
         endpoint='main.moderate',
-        page=page
+        page=page,
+        title="Comment Moderation"
     )
 
 @main.route('/moderate/enable/<int:id>')
