@@ -1,9 +1,10 @@
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from app import db, bcrypt,login_manager
 from flask_login import UserMixin,AnonymousUserMixin
-from markdown import markdown
-from flask import current_app,request
+from flask import current_app,request,url_for
+from app import db, bcrypt,login_manager
+from app.exceptions import ValidationError
 from datetime import datetime
+from markdown import markdown
 import hashlib
 import bleach
 
@@ -71,6 +72,32 @@ class User(db.Model,UserMixin):
             else:
                 self.role = Role.query.filter_by(default=True).first()
             self.avatar_hash = self.gravatar_hash()
+
+    def to_json(self):
+        json_user =  {
+            'url':url_for('api.get_user',id=self.id),
+            'username':self.username,
+            'member_since':self.member_since,
+            'last_seen':self.last_seen,
+            'posts_url':url_for('api.get_user_posts',id=self.id),
+            'follower_posts_url':url_for('api.get_user_followed_posts',id=self.id),
+            'post_count':self.posts.count()
+        }
+        return json_user
+
+    def generate_auth_token(self,expiration):
+        s = Serializer(current_app.config['SECRET_KEY'],expires_in=expiration)
+        return s.dumps({'id':self.id}).decode('utf-8')
+
+    @staticmethod
+    def check_auth_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return None
+        return User.find_by_id(data['id'])
+
 
     @property
     def followed_posts(self):
@@ -302,6 +329,28 @@ class Post(db.Model):
             )
         )  
     
+    def to_json(self):
+        json_post = {
+            'url':url_for('api.get_post',id=self.id),
+            'title':self.title,
+            'body':self.body,
+            'body_html':self.body_html,
+            'time_stamp':self.time_stamp,
+            'author_url':url_for('api.get_user',id=self.author_id),
+            'comments_url':url_for('api.get_post_comments',id=self.id),
+            'comments_count':self.comments.count()
+        }
+        return json_post
+
+    @staticmethod
+    def from_json(json_post):
+        body = json_post.get('body')
+        title = json_post.get('title')
+        if body is None or title is None or \
+            body == '' or title == '':
+            raise ValidationError('post does not have a body or title')
+        return Post(title=title,body=body)
+
     def __repr__(self):
         return f'Post<{self.title}>'
 
@@ -317,6 +366,23 @@ class Comment(db.Model):
 
     author_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     post_id = db.Column(db.Integer,db.ForeignKey('posts.id'))
+
+    def to_json(self):
+        json_comment = {
+            'url': url_for('api.get_comment', id=self.id),
+            'post_url': url_for('api.get_post', id=self.post_id),
+            'body': self.body,
+            'times_tamp': self.time_stamp,
+            'author_url': url_for('api.get_user', id=self.author_id),
+        }
+        return json_comment
+
+    @staticmethod
+    def from_json(json_comment):
+        body = json_comment.get('body')
+        if body is None or body == '':
+            raise ValidationError('comment does not have a body')
+        return Comment(body=body)
 
     def __repr__(self):
         return f'Comment<{self.author_id,self.post_id}>'
