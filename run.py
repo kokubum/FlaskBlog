@@ -2,8 +2,9 @@ from app.models import User,Role,Post,Comment,Permission
 from flask_migrate import Migrate
 from app import create_app
 from app import db
+import os
 
-app = create_app('default')
+app = create_app(os.environ.get('CONFIG_TYPE','default'))
 
 migrate = Migrate(app,db)
 
