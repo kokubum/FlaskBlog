@@ -7,6 +7,6 @@ Faker==4.1.1
 httpie==0.9.9
 idna==2.9
 Pygments==2.2.0
-requests==2.18.2
+requests==2.20.0
 selenium==3.4.3
 urllib3==1.22
