@@ -142,7 +142,7 @@ class User(db.Model,UserMixin):
 
 
     @property
-    def password():
+    def password(self):
         raise AttributeError("You can't acess the password")
 
     @password.setter
