@@ -4,7 +4,7 @@ certifi==2017.7.27.1
 chardet==3.0.4
 coverage==4.4.1
 Faker==4.1.1
-httpie==1.0.3
+httpie==3.1.0
 idna==2.9
 Pygments==2.2.0
 requests==2.20.0
